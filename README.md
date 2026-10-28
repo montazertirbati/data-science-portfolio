@@ -1,6 +1,6 @@
 # Data Science Coursework Portfolio
 
-Python and R coursework covering data cleaning, exploratory statistics, principal component analysis, classification, and model selection. This repository contains modernized Python implementations of exercises 5–8 alongside the original homework code as reference text.
+Python and R coursework covering data cleaning, exploratory statistics, principal component analysis, classification, and model selection. This repository contains runnable Python implementations of exercises 5–8 and modernized R implementations of exercises 1–3, alongside original drafts as reference text.
 
 ## Portfolio projects
 
@@ -8,6 +8,20 @@ Python and R coursework covering data cleaning, exploratory statistics, principa
 - [Spine Data: Principal Component Analysis](02-spine-pca/README.md)
 - [Block Classification](03-block-classification/README.md)
 - [Handwritten Digit Recognition](04-digit-recognition/README.md)
+
+## R exercises
+
+- [Pima Diabetes Missingness and Group Comparisons](05-r-diabetes-analysis/README.md)
+- [App Store Data Cleaning and Multiple Imputation](06-r-app-store-cleaning/README.md)
+- [Battery Lifetime Regression and Diagnostics](07-r-battery-regression/README.md)
+
+Each R exercise has an `analysis.R` entry point, an English explanation, and a synthetic demo. See [running R exercises](docs/RUNNING-R.md) and [R validation](docs/R-VALIDATION.md). R uses its own interpreter; Python and pip are not required.
+
+```powershell
+Rscript 05-r-diabetes-analysis/analysis.R --demo
+Rscript 06-r-app-store-cleaning/analysis.R --demo
+Rscript 07-r-battery-regression/analysis.R --demo
+```
 
 ## Capstone project
 

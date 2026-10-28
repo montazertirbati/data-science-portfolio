@@ -1,0 +1,23 @@
+name: Verify R exercises
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  r-smoke:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: 'release'
+      - run: Rscript 05-r-diabetes-analysis/analysis.R --demo
+      - run: Rscript 06-r-app-store-cleaning/analysis.R --demo
+      - run: Rscript 07-r-battery-regression/analysis.R --demo
+      - run: Rscript R/check_outputs.R
+      - uses: actions/upload-artifact@v4
+        with:
+          name: r-demo-results
+          path: |
+            outputs/r-diabetes/
+            outputs/r-app-store/
+            outputs/r-battery/

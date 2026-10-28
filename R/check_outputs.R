@@ -1,0 +1,12 @@
+# Meaningful invariants for the synthetic smoke runs.
+d <- read.csv("outputs/r-diabetes/missingness.csv")
+stopifnot(all(d$missing_after >= d$missing_before), any(d$missing_after > d$missing_before))
+g <- read.csv("outputs/r-diabetes/insulin_by_group.csv")
+stopifnot(nrow(g) == 2, all(g$n > 1), all(g$lower_95 <= g$mean_insulin), all(g$upper_95 >= g$mean_insulin))
+a <- read.csv("outputs/r-app-store/cleaned_apps.csv")
+stopifnot(nrow(a) == 200, all(na.omit(a$Installs) %in% c(1000, 10000, 100000)), all(na.omit(a$Updates) >= 0))
+b <- read.csv("outputs/r-battery/model-comparison.csv")
+stopifnot(nrow(b) == 2, all(b$n == 100), all(b$residual_df == 94), all(is.finite(b$r_squared)))
+x <- read.csv("outputs/r-battery/raw-response/diagnostics.csv")
+stopifnot(nrow(x) == 100, all(x$leverage >= 0 & x$leverage <= 1), all(x$bonferroni_p >= x$outlier_p))
+cat("R output invariants passed. Synthetic data only.\n")

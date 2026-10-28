@@ -54,6 +54,10 @@ py -m venv .venv
 
 The demo generates synthetic data. For the original course partition, follow the capstone README's `train` command. To get property recommendations from the supplied old prediction export without scikit-learn, the standalone `recommend.py` command needs only NumPy and pandas; those estimates remain legacy results.
 
+## Run the R exercises
+
+The R versions of exercises 1–3 now have standalone folders and English READMEs. Follow the [R execution guide](RUNNING-R.md) for R installation, Rscript, packages, original data paths and synthetic demonstrations. Python environments do not run `.R` scripts.
+
 ## Run a verification in GitHub itself
 
-GitHub stores the code; opening a Python file there does not execute it. The repository's **Actions** tab offers a verification workflow. Open **Verify portfolio**, choose **Run workflow**, select main, and run it. A green check means the workflow's checks passed. Open a run to read its logs and download any result artifacts. The portfolio workflow runs digits only; the housing workflow runs behavioral tests and a synthetic demonstration. Neither workflow trains on your private local files.
+GitHub stores the code; opening a Python file there does not execute it. The repository's **Actions** tab offers a verification workflow. Open **Verify portfolio**, choose **Run workflow**, select main, and run it. A green check means the workflow's checks passed. Open a run to read its logs and download any result artifacts. The Python portfolio workflow runs digits only; the separate **Verify R exercises** workflow runs the three R synthetic demos and checks their outputs; the housing workflow runs behavioral tests and a synthetic demonstration. Neither workflow trains on your private local files.
