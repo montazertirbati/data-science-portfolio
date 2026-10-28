@@ -24,7 +24,7 @@ Required schema: Bundled scikit-learn digits dataset; no external file required.
 
 ## Verification
 
-Syntax checked. Runtime verification pending because scikit-learn could not be downloaded in the preparation environment. No performance claim is made.
+The quick-mode SVM, decision tree and random forest workflow passed on GitHub Actions (Python 3.12). [View the verified run and result artifact](https://github.com/montazertirbati/data-science-portfolio/actions/runs/40752806860). Wider-grid evaluation has not been run.
 
 ## Limitations
 
