@@ -9,6 +9,10 @@ Python and R coursework covering data cleaning, exploratory statistics, principa
 - [Block Classification](03-block-classification/README.md)
 - [Handwritten Digit Recognition](04-digit-recognition/README.md)
 
+## Capstone project
+
+[House Price Prediction and Property Recommendations](https://github.com/montazertirbati/house-price-advisor) is a separate repository with regression pipelines, a budget-constrained recommendation CLI, and a synthetic demo.
+
 ## Featured work
 
 | Exercise | Skills | Runnable command |
@@ -20,19 +24,17 @@ Python and R coursework covering data cleaning, exploratory statistics, principa
 
 ## Run locally
 
-Use Python 3.11 or newer. From this directory:
+Use Python 3.11 or newer. Download and extract the repository, then open PowerShell in its root folder:
 
-```sh
-python -m venv .venv
-# Windows PowerShell:
-.venv\Scripts\Activate.ps1
-# macOS/Linux: source .venv/bin/activate
-python -m pip install -r requirements.txt
-python exercises/portfolio.py digits --quick
-python exercises/portfolio.py spine --data "../Spine.csv"
-python exercises/portfolio.py blocks --data "../homework7/blocks.csv" --quick
-python exercises/portfolio.py retail --data "../digi2.csv"
+```powershell
+py -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
+.\.venv\Scripts\python.exe 04-digit-recognition/analysis.py --quick
 ```
+
+The digits example needs no external dataset file. These commands do not require activating the environment. If `py` is unavailable, use `python -m venv .venv` for the first command. On macOS/Linux create the environment with `python3` and use `.venv/bin/python`.
+
+See the [step-by-step execution guide](docs/RUNNING.md) for Windows, local datasets, the housing capstone, and running checks through GitHub Actions.
 
 Outputs are written under `outputs/<exercise>/`. `--quick` reduces classification search size for a smoke run; omit it for the wider search. Dependencies use compatible ranges; this is not a locked environment.
 
