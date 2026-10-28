@@ -1,0 +1,43 @@
+library(faraway)
+data(pima)
+d<-pima
+d$diastolic[d$diastolic==0]=NA
+d$glucose[d$glucose==0]=NA
+d$triceps[d$triceps==0]=NA
+d$bmi[d$bmi==0]=NA
+d$insulin[d$insulin==0]=NA
+summary(d)
+agemiss<-d$age[is.na(d$triceps)]
+ageobserv<-d$age[is.finite(d$triceps)]
+1.
+par(mfrow=c(1,2))
+hist(d$age[is.na(d$triceps)],xlab="age-miss triceps",main="",col = "green",border="red")
+hist(d$age[is.finite(d$triceps)],xlab="age-observed triceps",main="",col = "green",border="red")
+
+2.
+mean(d$bmi[d$insulin>mean(d$insulin,na.rm=T)],na.rm=T)
+mean(d$bmi[d$insulin<mean(d$insulin,na.rm=T)],na.rm=T)
+3.
+Insulin = d$insulin[is.finite(d$insulin)]
+d$test<-as.factor(d$test)
+levels(d$test)=c("negative","positive")
+Test=d$test[is.finite(d$insulin)]
+npositive<-length(which(Test=="positive"))
+nnegative<-length(which(Test=="negative"))
+x<-c(nnegative, npositive)
+lbl<-c("negative","positive")
+m<-tapply(Insulin,Test,mean)
+sigma<-tapply(Insulin,Test,sd)
+UCL<-m+1.96*sigma/sqrt(x)
+LCL<-m-1.96*sigma/sqrt(x)
+plot(Test,Insulin,ylab="Insulin",main="observed value of insulin")
+c(LCL[1],UCL[1])
+c(LCL[2],UCL[2])
+max(m)-min(m)
+1.96*(sigma[1]/sqrt(x[1])+sigma[2]/sqrt(x[2]))
+1.96*sqrt(sigma[1]^2/x[1]+sigma[2]^2/x[2])
+
+npositive
+nnegative
+m
+sigma

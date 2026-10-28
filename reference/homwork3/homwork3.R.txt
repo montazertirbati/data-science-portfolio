@@ -1,0 +1,128 @@
+df <- read.csv("D:/data science class/battery.csv",header=TRUE, stringsAsFactors = F)
+length(df)
+summary(df)
+str(df)
+#d
+mf<-lm(cycles~charge+discharge+temp+endvolt+depth,data=df)
+mf$coefficients
+summary(mf)
+mr<-lm(cycles~depth,data=df)
+mr$coefficients
+summary(mr)
+anova(mr,mf)
+
+plot(mf$fitted.values, mf$residuals,xlab="Fitted Values",ylab="Residuals")
+abline(h=mean(mf$residuals),col="red")
+plot(mf$fitted.values,abs(mf$residuals),xlab="Fitted Values",ylab="|Residuals|")
+summary(lm(abs(mf$residual) ~ mf$fitted))
+library(nortest)
+ad.test(mf$residual)
+hist(mf$residuals)
+library(faraway)
+hi <- influence(mf)$hat
+which(hi>18/75)
+halfnorm(influence(mf)$hat, nlab = 0, ylab="Leverages")
+halfnorm(influence(mf)$hat, nlab = 2, ylab="Leverages")
+influence(mf)$hat
+df[48,]
+df[28,]
+colMeans(df)
+sqrt(diag(var(df)))
+(df[48,]-colMeans(df))/sqrt(diag(var(df)))
+(df[28,]-colMeans(df))/sqrt(diag(var(df)))
+resid <- residuals(mf)
+stud.res <-rstandard(mf)
+plot(stud.res, fitted.values(mf),ylab="Fitted Values",xlab="Studentized Residuals")
+points(stud.res[48],fitted.values(mf)[48],col="red")
+points(stud.res[28],fitted.values(mf)[28],col="red")
+which(stud.res>3)
+points(stud.res[11],fitted.values(mf)[11],col="red")
+
+ti <- rstudent(mf)
+fpvalue1<-function(x){pvalue<-2*(1-pt(abs(x), df=75-6-1)) ;return(pvalue)}
+pvalueall<-(apply(as.matrix(ti),1,fpvalue1))
+alfa=0.05/75
+alfa
+df[which(as.matrix(pvalueall) < alfa),]
+plot(ti, pvalueall,ylab="pvalue",xlab="ti")
+pvalueall[11]
+
+
+
+
+
+cook <- cooks.distance(mf)
+halfnorm(cook, nlab = 2, ylab="Cooks distance")
+df[c(11,58),]
+plot(mf$residual[1:75],xlab="i",ylab="e(i)")
+plot(mf$residual[1:75],xlab="i",ylab="e(i)",type="l")
+
+vif(mf)
+
+#k
+logdf<-df
+logdf$cycles<-log(df$cycles)
+colnames(logdf)[1]<-c("lcycles")
+logmf<-lm(lcycles~charge+discharge+temp+endvolt+depth,data=logdf)
+logmf$coefficients
+summary(logmf)
+logmr<-lm(lcycles~depth,data=logdf)
+logmr$coefficients
+summary(logmr)
+anova(logmr,logmf)
+plot(logmf$fitted.values, logmf$residuals,xlab="Fitted Values log",ylab="Residuals log")
+abline(h=mean(logmf$residuals),col="red")
+plot(logmf$fitted.values,abs(logmf$residuals),xlab="Fitted Values log",ylab="|Residuals log|")
+summary(lm(abs(logmf$residual) ~ logmf$fitted))
+library(nortest)
+ad.test(logmf$residual)
+library(faraway)
+loghi <- influence(logmf)$hat
+which(loghi>18/75)
+halfnorm(influence(logmf)$hat, nlab = 0, ylab="Leverages log")
+halfnorm(influence(logmf)$hat, nlab = 2, ylab="Leverages log")
+influence(logmf)$hat
+logdf[48,]
+logdf[28,]
+colMeans(logdf)
+sqrt(diag(var(logdf)))
+(logdf[48,]-colMeans(logdf))/sqrt(diag(var(logdf)))
+(logdf[28,]-colMeans(logdf))/sqrt(diag(var(logdf)))
+
+logresid <- residuals(logmf)
+logstud.res <-rstandard(logmf)
+plot(logstud.res, fitted.values(logmf),ylab="Fitted Values log",xlab="Studentized Residuals log")
+points(logstud.res[48],fitted.values(logmf)[48],col="red")
+points(logstud.res[28],fitted.values(logmf)[28],col="red")
+which(logstud.res>2)
+which(-2>logstud.res)
+
+points(logstud.res[52],fitted.values(logmf)[52],col="red")
+points(logstud.res[54],fitted.values(logmf)[54],col="red")
+points(logstud.res[58],fitted.values(logmf)[58],col="red")
+points(logstud.res[10],fitted.values(logmf)[10],col="red")
+points(logstud.res[45],fitted.values(logmf)[45],col="red")
+logti <- rstudent(logmf)
+fpvalue1<-function(x){pvalue<-2*(1-pt(abs(x), df=75-6-1)) ;return(pvalue)}
+logpvalueall<-(apply(as.matrix(logti),1,fpvalue1))
+alfa=0.05/75
+alfa
+logdf[which(as.matrix(logpvalueall) < alfa),]
+plot(logti,logpvalueall,ylab="pvalue log",xlab="ti log")
+
+#max(abs(logti))
+#which(logti == max(abs(logti)))
+#logdf[which(logti == max(abs(logti))),]
+#2*(1-pt(max(abs(logti)), df=75-6-1))
+#alfa=0.05/75
+#alfa
+
+
+
+logcook <- cooks.distance(logmf)
+halfnorm(logcook, nlab = 2, ylab="Cooks distance log")
+logdf[c(54,58),]
+plot(logmf$residual[1:75],xlab="i",ylab="e(i)log")
+plot(logmf$residual[1:75],xlab="i",ylab="e(i)log",type="l")
+
+vif(logmf)

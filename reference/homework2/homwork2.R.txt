@@ -1,0 +1,76 @@
+a)
+df <- read.csv("D:/data science class/googleplaystore3.csv",header=TRUE, stringsAsFactors = F)
+is.data.frame(df)
+b)
+summary(df)
+str(df)
+d)
+names(df)
+levels(df$Category)
+df$Category<-as.factor(df$Category)
+levels(df$Category)=seq(1,33,1)
+levels(df$Category)
+e)
+unique(df$Type)
+summary(df$Type)
+f)
+df$Type[df$Type== " "]=NA
+summary(df$Type)
+g)
+levels(df$Type)
+summary(df)
+h)
+is.character(df$Last.Updated)
+is.numeric(df$Last.Updated)
+df$Last.Updated<-as.Date(df$Last.Updated, tryFormats = c("%m/%d/%Y","%Y/%d/%m","%Y%d-%m","%m-%d-%Y","%d/%m/%Y","%Y/%m/%d","%Y-%m-%d","%d-%m-%Y"))
+i)
+Sys.Date()
+Updates<-Sys.Date()-df$Last.Updated[]
+df$Updates<-Updates
+is.numeric(df$Updates)
+df$Updates<-as.numeric(df$Updates)
+is.numeric(df$Updates)
+is.numeric(Updates)
+str(df)
+j)
+spinst<-strsplit(df$Installs[1],"")
+spinst
+spinst=unlist(spinst)
+spinst
+spinst=spinst[spinst!=","]
+spinst
+spinst=spinst[spinst!="+"]
+spinst
+paste(spinst,collapse="")
+k)
+library(mice)
+library(VIM)
+colnames(df)
+dff<-df[,c( "Category", "Rating","Reviews","Type","Updates")]
+dff$Type=as.factor(dff$Type)
+imput<-mice(dff,m=2,meth=c("polyreg","sample","pmm","logreg","pmm"))
+
+imput$imp$Rating
+aggr<- aggr(dff, col=c('black','red'), numbers=TRUE, sortVars=TRUE,labels=names(dff), cex.axis=.7, gap=1, ylab=c("Barplot of missing data","Patterns"))
+marginplot(dff[,c(1,2)])
+marginplot(dff[,c(1,3)])
+marginplot(dff[,c(1,4)])
+marginplot(dff[,c(1,5)])
+marginplot(dff[,c(2,3)])
+marginplot(dff[,c(2,4)])
+marginplot(dff[,c(2,5)])
+marginplot(dff[,c(3,4)])
+marginplot(dff[,c(3,5)])
+marginplot(dff[,c(4,5)])
+md.pattern(dff)
+xyplot(imput, Reviews ~ Rating| .imp, pch = 20, cex = 1.4)
+xyplot(imput, Rating ~ Updates| .imp, pch = 20, cex = 1.4)
+
+stripplot(imput, pch = 20, cex = 1.2)
+summary(dff)
+str(dff)
+densityplot(imput)
+com<- complete(imput,1)
+summary(com)
+8.
+df <- read.csv("D:/data science class/googleplaystore3.csv",header=TRUE, stringsAsFactors = F)

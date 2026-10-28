@@ -1,0 +1,223 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Jan 30 20:19:31 2021
+
+@author: Asus
+"""
+import numpy as np
+
+from sklearn.datasets import load_digits
+
+digits = load_digits(return_X_y =True)
+X=digits[0]
+y=digits[1]
+plt.imshow(X[0,:].reshape(8,8))
+from sklearn import svm
+from sklearn.model_selection import train_test_split
+from sklearn.model_selection import GridSearchCV
+from sklearn.metrics import confusion_matrix
+X_train, X_test, y_train, y_test = train_test_split(X,y, test_size=0.2)
+
+
+# =============================================================================
+# crossvalidate the hyperparameter 𝐜 in a linear SVM
+#
+# =============================================================================
+svm_clf = svm.SVC()
+Hyperparameters= {'C':np.arange(0.01,11,1),'kernel':['linear']}
+cv_grid = GridSearchCV(estimator= svm_clf ,param_grid = Hyperparameters, scoring ='accuracy',cv = 10)
+cv_grid= cv_grid.fit(X_train, y_train)
+cv_grid.best_params_# this code gives you the best hyperparameters
+{'C': 0.01, 'kernel': 'linear'}
+cv_grid.best_score_# this code gives the best crossvalidation score (it is accuracy here)0.9763500388500388
+cv_grid.cv_results_['params']# this code gives you all the parameters used in your crossvalidation
+cv_grid.cv_results_['mean_test_score']
+cv_grid.best_estimator_.fit(X_train, y_train)#get the best estimator and fit it on the train data
+cv_grid.score(X_test,y_test)# compute the testing accuracy
+y_pred=cv_grid.predict(X_test)
+confusion_matrix(y_test,y_pred)
+
+# =============================================================================
+# Crossvalidate the hyperparameters 𝐜, 𝛄 and the kernels in SVM
+#
+# =============================================================================
+
+Hyperparameters = {'C':np.arange(0.01,11,1),'gamma':np.arange(0.001,0.01,0.001),'kernel':['linear','rbf']}
+svm_clf = svm.SVC()
+cv_grid= GridSearchCV(estimator= svm_clf ,param_grid = Hyperparameters, scoring ='accuracy',cv = 10)
+cv_grid= cv_grid.fit(X_train, y_train)
+cv_grid.best_params_
+{'C': 2.01, 'gamma': 0.001, 'kernel': 'rbf'} # this is the best setting for hyperparameters, and we can use it for prediction
+cv_grid.best_estimator_.fit(X_train, y_train)
+cv_grid.score(X_test,y_test)
+Hyperparameters ={'C':np.arange(0.01,11,1),'gamma':np.arange(0.001,0.01,0.001),'degree':range(5),'kernel':['linear','rbf','poly']}
+svm_clf = svm.SVC()
+cv_grid= GridSearchCV(estimator= svm_clf ,param_grid = Hyperparameters, scoring ='accuracy',cv = 10)
+cv_grid= cv_grid.fit(X_train, y_train)
+cv_grid.best_params_
+cv_grid.best_score_
+
+# =============================================================================
+# c) The parameter ccp_alpha in decision tree. If you do not have sklearn version 0.22, you can
+# cross validate max_depth parameter.
+# =============================================================================
+# =============================================================================
+# This crossvalidation is for ccp_alpha (cost-complexity criterion)
+#
+# =============================================================================
+Hyperparameters = {'ccp_alpha':np.arange(0.0001,0.004,0.0001)}
+dec_tree=tree.DecisionTreeClassifier()
+cv_grid = GridSearchCV(estimator= dec_tree ,param_grid = Hyperparameters, scoring ='accuracy',cv = 10)
+cv_grid = cv_grid.fit(X_train, y_train)
+cv_grid.best_params_
+cv_grid.best_score_
+
+# =============================================================================
+# This crossvalidation is for max_depth
+#
+# =============================================================================
+Hyperparameters = { 'max_depth':np.arange(1,50,1)}
+dec_tree=tree.DecisionTreeClassifier()
+cv_grid = GridSearchCV(estimator= dec_tree ,param_grid = Hyperparameters, scoring ='accuracy',cv = 10)
+cv_grid = cv_grid.fit(X_train, y_train)
+cv_grid.best_params_
+cv_grid.best_score_
+
+# =============================================================================
+# d) Number of estimators for bagging. You can use the best tree obtained from part c as your base
+# estimator.
+# =============================================================================
+Hyperparameters = { 'n_estimators':np.arange(1,200,10)}
+dec_tree=tree.DecisionTreeClassifier(max_depth=24)
+bag=BaggingClassifier(base_estimator=dec_tree)
+cv_grid = GridSearchCV(estimator= bag ,param_grid = Hyperparameters, scoring ='accuracy',cv = 10)
+cv_grid = cv_grid.fit(X_train, y_train)
+cv_grid.best_params_
+cv_grid.best_score_
+
+# =============================================================================
+# e) Number of estimators (M in slides) for boosting. You can use the best tree obtained from part
+# c as your base estimator.
+# =============================================================================
+Hyperparameters = {'n_estimators':np.arange(1,200,10)}
+dec_tree=tree.DecisionTreeClassifier(max_depth=24)
+boost=AdaBoostClassifier(base_estimator=dec_tree)
+cv_grid = GridSearchCV(estimator= boost ,param_grid = Hyperparameters, scoring ='accuracy',cv = 10)
+cv_grid = cv_grid.fit(X_train, y_train)
+cv_grid.best_params_
+cv_grid.best_score_
+
+# =============================================================================
+# f) Number of estimators and max_depth in random forest.
+#
+# =============================================================================
+Hyperparameters = {'n_estimators':np.arange(1,100,10),'max_depth':np.arange(1,50,5)}
+rf=RandomForestClassifier()
+cv_grid = GridSearchCV(estimator= rf ,param_grid = Hyperparameters, scoring ='accuracy',cv = 10)
+cv_grid = cv_grid.fit(X_train, y_train)
+cv_grid.best_params_
+cv_grid.best_score_
+
+
+# =============================================================================
+# 2- Reshape the images into 8×8 arrays and use CNN to classify your dataset. Compare the testing
+# accuracy of all methods and introduce the best. You need to decide on the number of filters, filter
+# size, whether to dropout or not, whether to pool layers or not, number of epochs, batch size, etc.
+# This is how you can reshape:
+# =============================================================================
+X_train=X_train.reshape((X_train.shape[0],8,8,1))
+X_test=X_test.reshape((X_test.shape[0],8,8,1))
+
+class sklearn.model_selection.RandomizedSearchCV(estimator, param_distributions, n_iter=10, scorin
+g=None, cv=None)
+
+# =============================================================================
+# Step 1: Use the keras.models.Sequential() function to add the layers. This is how it will
+# look like
+# =============================================================================
+model=keras.models.Sequential()
+model.add(keras.layers.Conv2D(filters=50, kernel_size=5, strides=1, activation='relu', input_shape=(8,8,1),
+padding='same'))
+model.add(keras.layers.Conv2D(filters=150, kernel_size=3, strides=1, activation='relu'))
+model.add(keras.layers.MaxPool2D(pool_size=2, strides=2))
+model.add(keras.layers.Flatten())
+model.add(keras.layers.Dense(160, activation='relu'))
+model.add(keras.layers.Dense(10, activation='softmax'))
+
+# =============================================================================
+# Step 2: compile the model
+#
+# =============================================================================
+model.compile(optimizer=tf.compat.v1.train.AdamOptimizer(learning_rate=0.01),
+loss='sparse_categorical_crossentropy',metrics=['accuracy'])
+
+# =============================================================================
+# Step 3: fit the model
+#
+# =============================================================================
+model.fit(X_train, y_train, epochs = 10, batch_size = 50)
+
+
+
+
+def bl_model(nf1,nf2,ks1,ks2,n_units,lrt):
+        model=keras.models.Sequential()
+        model.add(keras.layers.Conv2D(filters=nf1, kernel_size=ks1, strides=1, activation='elu',
+        input_shape=(8,8,1), padding='same'))
+        model.add(keras.layers.Conv2D(filters=nf2, kernel_size=ks2, strides=1, activation='relu'))
+        model.add(keras.layers.MaxPool2D(pool_size=2, strides=2))
+        model.add(keras.layers.Flatten())
+        model.add(keras.layers.Dense(n_units, activation='relu'))
+        model.add(keras.layers.Dense(10, activation='softmax'))
+        model.compile(optimizer=tf.compat.v1.train.AdamOptimizer(learning_rate=lrt),
+        loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+        return(model)
+
+Model = bl_model(nf1 = 50, nf2 = 150 ,ks1 = 3, ks2 = 3 , n_units = 100, lrt = 0.01)
+Model.summary() # Get a summary of your model
+params={'nf1':[32,16],'nf2':[128,256],'ks1':[3,5],'ks2':[3,2],'n_units':[64,128],'lrt':[0.0005,0.001],'epochs':[10,20]
+,'batch_size':[30,50]}
+
+from keras.wrappers.scikit_learn import KerasClassifier
+final_model=KerasClassifier(bl_model)
+
+# =============================================================================
+# Now, we are really ready to do some crossvalidations.
+#
+# =============================================================================
+from sklearn.model_selection import RandomizedSearchCV
+cnn=RandomizedSearchCV(final_model,param_distributions=params, n_iter=10, scoring='accuracy', cv=5)
+cnn.fit(X_train,y_train)
+
+# =============================================================================
+# What is left for you to do?
+# First, use wider sets of ranges for all the hyperparameters defined in ‘params’ above.
+# Run the function again and fit the model. Get the best set of parameters. You can use a
+# five-fold crossvalidation to reduce the running time.
+# Second, you need to modify bl_model function to decide on doing drop out or not. This
+# means that you have to add an input to the function and change the function body. The
+# input can be in the format of true/false which if true, a drop out layer must be added.
+# Add the layer right before your dense layer. The probability of discarding a unit can be
+# set to 0.5. Here is how the layer should look like
+# =============================================================================
+
+
+model.add(keras.layers.Dropout(0.5))
+params={'nf1':[16,32,64,128],'nf2':[128,256,64],'ks1':[3,5],'ks2':[3,2],'n_units':[64,128],'lrt':[0.005,0.01,0.001],'epochs':[10,20,30],'batch_size':[30,50],'drop':[0,0.5]}
+def bl_model(nf1,nf2,ks1,ks2,n_units,lrt,drop):
+        model=keras.models.Sequential()
+        model.add(keras.layers.Conv2D(filters=nf1,kernel_size=ks1,strides=1,activation='elu',input_shape=(8,8,1),p
+        adding='same'))
+        model.add(keras.layers.Conv2D(filters=nf2,kernel_size=ks2,strides=1,activation='relu'))
+        model.add(keras.layers.MaxPool2D(pool_size=2,strides=2))
+        model.add(keras.layers.Flatten())
+        model.add(keras.layers.Dropout(drop))
+        model.add(keras.layers.Dense(n_units,activation='relu'))
+        model.add(keras.layers.Dense(10,activation='softmax'))
+        model.compile(optimizer=tf.compat.v1.train.AdamOptimizer(learning_rate=lrt),
+        loss='sparse_categorical_crossentropy',metrics=['accuracy'])
+        return(model)
+final_model=KerasClassifier(bl_model)
+cnn=RandomizedSearchCV(final_model,param_distributions=params, n_iter=10, scoring='accuracy', cv=5)
+cnn.fit(X_train,y_train)
+cnn.best_params_

@@ -1,0 +1,84 @@
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import matplotlib.pyplot as plt
+
+df=pd.read_csv('D:\data science class/digi2.csv',encoding='UTF-8')
+df.columns
+df.isna().agg(np.sum)
+df.drop(['Amount_Gross_Order'],axis=1,inplace=True)
+df.drop_duplicates(inplace=True)
+df.describe(include="all")
+df['DateTime_CartFinalize' ]=df['DateTime_CartFinalize' ].agg(pd.Timestamp)
+from persiantools.jdatetime import JalaliDate
+ JalaliDate(pd.Timestamp('1/17/2020'))
+JalaliDate(pd.Timestamp('1/6/2020')).year
+JalaliDate(pd.Timestamp('1/6/2020')).month
+JalaliDate(pd.Timestamp('1/6/2020')).day
+
+df1.tail(1)['DateTime_CartFinalize']
+df.head(1)['DateTime_CartFinalize']
+
+
+np.unique(df1['ID_Item']).shape
+np.unique(df1[ 'ID_Customer']).shape
+np.unique(df1[ 'city_name_fa' ]).shape
+
+
+df2=df.groupby('city_name_fa' )
+s=df2.count().loc[:,'ID_Order']
+
+df3=df2.count().sort_values('ID_Order',ascending=False)
+df4=df3.iloc[:20,:]
+
+def yearr(x):
+    x=pd.Timestamp(x)
+    yearr=x.year
+    return(yearr)
+
+df1['year']=df1['DateTime_CartFinalize'].agg(yearr)
+
+
+df5=df1.groupby('year' )
+ss=df5.count().loc[:,'ID_Order']
+df7=df1.groupby(['city_name_fa','year'])
+df6=df1.groupby(['city_name_fa','year']).count()['ID_Order']
+df7.count()
+df8=df7.agg({"Quantity_item":['mean','std']})
+df8.columns
+df6.loc['اصفهان',:]
+df6.loc['تهران',:]
+
+df9=df1.groupby(['Quantity_item'])
+df9.count()
+
+df10=df9.count().index.sort_values(ascending=False)
+df11=df10[:20]
+
+
+#df9=df1.groupby(['Quantity_item'])
+df12=df1.groupby(['city_name_fa','Quantity_item'])
+df13=df1.groupby(['city_name_fa','Quantity_item']).count()
+#df12.get_group('رشت')
+df13.loc['رشت',:]
+df13.loc['مشهد',:]
+
+
+df14=df1.groupby(['year','Quantity_item'])
+df1.groupby(['year','Quantity_item']).count()
+
+
+df15=df1.groupby(['ID_Customer'])
+df16=df15.count().sort_values('DateTime_CartFinalize',ascending=False)
+df17=df16.iloc[:20,2]
+
+
+df1[ 'ID_Item' ].value_counts().iloc[:20]
+
+
+cities=df1['city_name_fa'].unique()# find the cities
+b=dict()#define an empty dictionary. A dictionary is similar to a list only that each element can have a name in a dictionary
+for x in np.unique(df1['city_name_fa'])
+ b[x]=df.groupby('city_name_fa').get_group(x)['ID_Item'].value_counts().index[:5]
+
+ for x in cities
+   b[x]=df.groupby('city_name_fa').get_group(x)['ID_Item'].value_counts().index[:5]
